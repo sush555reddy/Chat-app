@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>website</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+    crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body ng-app="myapp" ng-controller="indexController">
+  
+  
+  <nav class="navbar navbar-expand-lg navbar-light bg-light nav nav-tabs " >
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link  "   href="#/">Home
+          <span class="sr-only">(current)</span>
+        </a>
+        <a class="nav-item nav-link" href="#/login" ng-if="login"> Login</a>
+        <a class="nav-item nav-link" href="#/register" ng-if="login">Register</a>
+        <a class="nav-item nav-link" href="#/profile" ng-if="!login">profile</a>
+        <a class="nav-item nav-link" href="#/messages" ng-if="!login">messages</a>
+        <a class="nav-item nav-link form-inline my-2 my-lg-0" href="#/logout" ng-if="!login" >logout</a>
+      </div>
+    </div>
+  </nav>
+  <div ng-view>
+  </div>
+  <script src="https://code.angularjs.org/1.5.5/angular.min.js"></script>
+  <script src="https://code.angularjs.org/1.5.5/angular-route.min.js"></script>
+  <script src="index.js"></script>
+</body>
+
+</html>
