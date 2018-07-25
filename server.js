@@ -1,5 +1,5 @@
-var express = require("express"),
-  app = express();
+const express = require('express');
+const app = express();
 var mongoose = require("mongoose");
 var cors = require("cors");
 app.use(cors());
@@ -40,19 +40,21 @@ app.get('/users/:user',function(req,res){
 });
 
 app.get('/msgs/:id',function(req,res){
-  console.log("PPP");
-  console.log(req.params.id)
+  //console.log("PPP");
+  //console.log(req.params.id)
   Message.findOne({_id:req.params.id}).then(msgs=>{
-  console.log(msgs)
+  //console.log(msgs)
     res.send(msgs);
   }).catch(()=>{
     res.send("no messages");
   })
+
 });
 app.post('/reply/:id',function(req,res){
    Message.findOne({_id:req.params.id}).then(msgs=>{
      msgs.replys.push(req.body.reply);
-     msgs.save().then(function(msg){
+     msgs.save().then(msg => {
+       console.log(msg);
       res.send(msg);
      })
    }).catch(()=>{
@@ -99,6 +101,7 @@ app.post('/update',function(req,res){
 });
 
 app.post("/login", function(req, res) {
+  console.log(req.body.loginform.username);
   User.findOne({
     username: req.body.loginform.username
   }).then(user => {

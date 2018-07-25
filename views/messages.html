@@ -5,8 +5,8 @@
           <h5>From: {{message.sender}}</h5>
           <p>{{message.title}}</p>
           <p>{{message.description}}</p>
-          <a href="/#/detailmsg/{{message._id}}" ng-click="clickedMessage($event)" >
-             <button class="btn btn-primary">Details</button></a>
+
+          <button id={{message._id}} ng-click="clickedMessage($event)" class="btn btn-sm btn-primary">Details</button>
              <br>
           
       </div>

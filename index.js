@@ -26,46 +26,62 @@ app.config(function($routeProvider) {
     .when("/messages", {
       templateUrl: "views/messages.html",
       controller: "msgController",
-      resolve: [
-        "authService",function(authService) {
-          return authService.isLoggedIn();
-        }
-      ]
+      // resolve: [
+      //   "authService",function(authService) {
+      //     return authService.isLoggedIn();
+      //   }
+      // ]
     })
     .when("/detailmsg/:id", {
       templateUrl: "views/detailmsg.html",
       controller: "detailmsgController",
-       resolve: ['authService', function (authService) {
-                return authService.isLoggedIn();
-            }]
+      //  resolve: ['authService', function (authService) {
+      //           return authService.isLoggedIn();
+      //       }]
     })
     .when("/logout", {
       templateUrl: "views/main.html",
       controller: "logoutController"
     });
 });
-app.factory("authService", function($http, $location, $q) {
-  var defer = $q.defer();
+
+app.factory('authService',function($location){
   return {
-    isLoggedIn: function() {
-      $http.get("http://127.0.0.1:5500/status.json").then(function(data) {
-        if (data.data.isLoggedIn) {
-          defer.resolve();
-        } else {
-          $location.path("/");
-          defer.reject();
-        }
-      });
-      return defer.promise;
-    } 
-  };
+    isLoggedIn: function(){
+      // ("inside function");
+      if (sessionStorage.loggedin == "false") {
+        $location.url("/login");
+      }
+    }
+  }
 });
+
+
+// app.factory("authService", function($http, $location, $q) {
+//   var defer = $q.defer();
+//   return {
+//     isLoggedIn: function() {
+//       $http.get("http://127.0.0.1:5500/status.json").then(function(data) {
+//         if (data.data.isLoggedIn) {
+//           defer.resolve();
+//         } else {
+//           $location.path("/");
+//           defer.reject();
+//         }
+//       });
+//       return defer.promise;
+//     } 
+//   };
+// });
 
 app.controller("detailmsgController", function( $scope,$http, $location,$rootScope,$routeParams,authService) {
   authService.isLoggedIn();
+  
   $scope.$emit("login", {});
   //$scope.num = $routeParams.id;
   //console.log($scope.num);
+  //console.log($routeParams.id);
+  //$scope.clickedMessage = function(event){
   $http.get(`http://localhost:3000/msgs/${$routeParams.id}`).then(function(res){
           if(res.data.favorite ==true){
             $scope.favtrue = true;
@@ -77,6 +93,7 @@ app.controller("detailmsgController", function( $scope,$http, $location,$rootSco
       .catch(function(err){
           console.log(err);
       });
+     // }
       $scope.delete = function(event){
         var id = event.target.id;
         $http.get(`http://localhost:3000/delete/${id}`).then(function(res){
@@ -102,7 +119,7 @@ app.controller("detailmsgController", function( $scope,$http, $location,$rootSco
               $scope.favtrue = false;
             }
             $scope.message = res.data;
-            console.log($scope.message);
+            //console.log($scope.message);
           }
         }).catch((err)=>{
           console.log(err);
@@ -120,7 +137,7 @@ app.controller("detailmsgController", function( $scope,$http, $location,$rootSco
               $scope.favtrue = false;
             }
             $scope.message = res.data;
-            //console.log($scope.message);
+            console.log($scope.message);
           }
         }).catch((err)=>{
           console.log(err);
@@ -128,15 +145,26 @@ app.controller("detailmsgController", function( $scope,$http, $location,$rootSco
       }
 });
 
-app.controller("msgController", function($http,$scope,authService) {
+app.controller("msgController", function($http,$scope,authService,$location) {
   authService.isLoggedIn();
+  // if(authService.isLoggedIn()==false){
+  //   $location.path('/login');
+  // }
   $scope.$emit("login", {});
   $http.get(`http://localhost:3000/messages/${sessionStorage.user}`).then(function(res){
-      console.log(res.data);
+ 
+      //console.log(res.data);
       $scope.messages = res.data;
   }).catch(function(err){
       console.log(err);
   });
+
+
+$scope.clickedMessage = function(event){
+  $location.url(`/detailmsg/${event.target.id}`)
+  //console.log(event.target.id)
+}
+
 });
 app.controller("indexController", function($scope, $rootScope) {
   $scope.login = true;
@@ -151,6 +179,8 @@ app.controller("indexController", function($scope, $rootScope) {
 app.controller("logoutController", function($scope, $rootScope) {
   localStorage.isLoggedIn = false;
   $scope.$emit("logout", {});
+  sessionStorage.loggedin = false;
+  sessionStorage.user = undefined;
   alert("logged out successfully");
 });
 app.controller("loginController", function(
@@ -159,8 +189,7 @@ app.controller("loginController", function(
   $location,
   $rootScope
 ) {
-  sessionStorage.loggedin = false;
-  sessionStorage.user = undefined;
+  
   $scope.$emit("logout", {});
   $scope.login = function() {
     $http
@@ -250,5 +279,3 @@ app.controller("registerController", function(
       });
   };
 });
-
-

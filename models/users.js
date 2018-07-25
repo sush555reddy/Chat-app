@@ -25,6 +25,6 @@ const msgSchema = new mongoose.Schema({
     default:false
   },
   replys:[String]
-},{collection: 'usermessages'});
+},{collection: 'message'});
 
 mongoose.model('messages', msgSchema);
